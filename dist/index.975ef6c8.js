@@ -27169,9 +27169,14 @@ function App() {
         title: "Indescision App",
         subtitle: "Put your life in the hands of a computer",
         options: [],
-        decision: ""
+        completed: [],
+        goals: [
+            "general",
+            "play"
+        ],
+        decision: []
     });
-    const { title, subtitle, options, decision } = state;
+    const { title, subtitle, options, completed, goals, decision } = state;
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         children: [
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _headerDefault.default), {
@@ -27179,7 +27184,7 @@ function App() {
                 subtitle: subtitle
             }, void 0, false, {
                 fileName: "src/App.js",
-                lineNumber: 19,
+                lineNumber: 21,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _actionDefault.default), {
@@ -27187,39 +27192,40 @@ function App() {
                 setState: setState
             }, void 0, false, {
                 fileName: "src/App.js",
-                lineNumber: 20,
+                lineNumber: 22,
                 columnNumber: 7
             }, this),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
-                children: decision
-            }, void 0, false, {
-                fileName: "src/App.js",
-                lineNumber: 21,
-                columnNumber: 7
-            }, this),
+            decision.map((dec)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                    children: decision.length > 0 ? dec.getText() : ""
+                }, decision.length > 0 && dec.getText(), false, {
+                    fileName: "src/App.js",
+                    lineNumber: 23,
+                    columnNumber: 28
+                }, this)),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _optionsDefault.default), {
                 options: options,
                 setState: setState
             }, void 0, false, {
                 fileName: "src/App.js",
-                lineNumber: 22,
+                lineNumber: 24,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _addOptionDefault.default), {
+                goals: goals,
                 setState: setState
             }, void 0, false, {
                 fileName: "src/App.js",
-                lineNumber: 23,
+                lineNumber: 25,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/App.js",
-        lineNumber: 18,
+        lineNumber: 20,
         columnNumber: 5
     }, this);
 }
-_s(App, "l94S10rJKcWAJUNKhzhR2MgihHo=");
+_s(App, "jOfZqopQ/nyNfIPdXZKlB4x2EH4=");
 _c = App;
 var _c;
 $RefreshReg$(_c, "App");
@@ -27452,26 +27458,126 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>Action);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _s = $RefreshSig$();
 function Action({ options, setState }) {
+    _s();
+    const [showEnergy, toggleShowEnergy] = (0, _react.useState)(false);
+    const [showTime, toggleShowTime] = (0, _react.useState)(false);
+    const [topDecisions, setTopDecisions] = (0, _react.useState)([]);
     const onDecision = ()=>{
         const randomNum = Math.floor(Math.random() * options.length);
+        const highestRank = options.reduce((acc, option)=>option.getRank() > acc ? acc = option.getRank() : acc, 0);
+        const topOptions = options.filter((option)=>option.getRank() === highestRank);
+        setTopDecisions(topOptions);
+        toggleShowEnergy(!showEnergy);
+    };
+    const filterEnergy = (e)=>{
+        e.preventDefault();
+        setTopDecisions(topDecisions.filter((decision)=>decision.getEnjoyment() <= e.target.elements.energy.value));
+        console.log(topDecisions);
+        toggleShowEnergy(!showEnergy);
+        toggleShowTime(!showTime);
+    };
+    const filterTime = (e)=>{
+        e.preventDefault();
+        setTopDecisions(topDecisions.filter((decision)=>decision.getRequiredTime() === null || decision.getRequiredTime() <= e.target.elements.time.value));
+        console.log(topDecisions);
+        toggleShowTime(!showTime);
         setState((prev)=>{
             return {
                 ...prev,
-                decision: options[randomNum]
+                decision: topDecisions
             };
         });
     };
-    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-        onClick: onDecision,
-        disabled: options.length === 0 && true,
-        children: "What should I do?"
-    }, void 0, false, {
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                onClick: onDecision,
+                disabled: options.length === 0 && true,
+                children: "What should I do?"
+            }, void 0, false, {
+                fileName: "src/components/Action.js",
+                lineNumber: 36,
+                columnNumber: 7
+            }, this),
+            showEnergy && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
+                onSubmit: filterEnergy,
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                        children: "On a scale of 1 to 5, what is your energy level?"
+                    }, void 0, false, {
+                        fileName: "src/components/Action.js",
+                        lineNumber: 38,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                        type: "number",
+                        name: "energy",
+                        min: 1,
+                        max: 5
+                    }, void 0, false, {
+                        fileName: "src/components/Action.js",
+                        lineNumber: 39,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                        type: "submit",
+                        children: "enter"
+                    }, void 0, false, {
+                        fileName: "src/components/Action.js",
+                        lineNumber: 40,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "src/components/Action.js",
+                lineNumber: 37,
+                columnNumber: 22
+            }, this),
+            showTime && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
+                onSubmit: filterTime,
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                        children: "How much time in minutes do you havedo you have?"
+                    }, void 0, false, {
+                        fileName: "src/components/Action.js",
+                        lineNumber: 43,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                        type: "number",
+                        name: "energy",
+                        min: 15,
+                        max: 180
+                    }, void 0, false, {
+                        fileName: "src/components/Action.js",
+                        lineNumber: 44,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                        type: "submit",
+                        children: "enter"
+                    }, void 0, false, {
+                        fileName: "src/components/Action.js",
+                        lineNumber: 45,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "src/components/Action.js",
+                lineNumber: 42,
+                columnNumber: 20
+            }, this)
+        ]
+    }, void 0, true, {
         fileName: "src/components/Action.js",
-        lineNumber: 12,
+        lineNumber: 35,
         columnNumber: 5
     }, this);
 }
+_s(Action, "iBGwsmGfv5EQcDb+ggPIayIpgk8=");
 _c = Action;
 var _c;
 $RefreshReg$(_c, "Action");
@@ -27481,7 +27587,7 @@ $RefreshReg$(_c, "Action");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"1tcZk":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","react":"21dqq"}],"1tcZk":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$fa77 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -27511,7 +27617,21 @@ function Options({ options, setState }) {
         setState((prev)=>{
             return {
                 ...prev,
-                options: prev.options.filter((option)=>option !== options[index])
+                options: prev.options.filter((option)=>option.getText() !== options[index].getText())
+            };
+        });
+    };
+    const completeOption = (e)=>{
+        e.preventDefault();
+        const index = e.target.id;
+        setState((prev)=>{
+            return {
+                ...prev,
+                options: prev.options.filter((option)=>option.getText() !== options[index].getText()),
+                completed: [
+                    ...prev.completed,
+                    options[index]
+                ]
             };
         });
     };
@@ -27521,7 +27641,7 @@ function Options({ options, setState }) {
                 children: options.length > 0 ? `Here are your options:` : `No options`
             }, void 0, false, {
                 fileName: "src/components/Options.js",
-                lineNumber: 29,
+                lineNumber: 41,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -27529,28 +27649,29 @@ function Options({ options, setState }) {
                 children: "Clear Options"
             }, void 0, false, {
                 fileName: "src/components/Options.js",
-                lineNumber: 30,
+                lineNumber: 42,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ol", {
                 children: options.map((item, i)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _optionDefault.default), {
                         item: item,
                         i: i,
-                        removeOption: removeOption
-                    }, item, false, {
+                        removeOption: removeOption,
+                        completeOption: completeOption
+                    }, item.getText(), false, {
                         fileName: "src/components/Options.js",
-                        lineNumber: 33,
+                        lineNumber: 45,
                         columnNumber: 11
                     }, this))
             }, void 0, false, {
                 fileName: "src/components/Options.js",
-                lineNumber: 31,
+                lineNumber: 43,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/components/Options.js",
-        lineNumber: 28,
+        lineNumber: 40,
         columnNumber: 5
     }, this);
 }
@@ -27574,10 +27695,10 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>Option);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
-function Option({ item, removeOption, i }) {
+function Option({ item, removeOption, completeOption, i }) {
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
         children: [
-            item,
+            item.getText(),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
                 id: i,
                 onClick: removeOption,
@@ -27586,9 +27707,18 @@ function Option({ item, removeOption, i }) {
                 fileName: "src/components/Option.js",
                 lineNumber: 5,
                 columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                id: i,
+                onClick: completeOption,
+                children: "Complete"
+            }, void 0, false, {
+                fileName: "src/components/Option.js",
+                lineNumber: 6,
+                columnNumber: 7
             }, this)
         ]
-    }, item, true, {
+    }, i, true, {
         fileName: "src/components/Option.js",
         lineNumber: 3,
         columnNumber: 5
@@ -27614,10 +27744,83 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>AddOption);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
-function AddOption({ setState }) {
+var _dropdown = require("./Dropdown");
+var _dropdownDefault = parcelHelpers.interopDefault(_dropdown);
+var _react = require("react");
+var _s = $RefreshSig$();
+class Action {
+    constructor(text, goal, delegate = "", dueDate = "", enjoyment = 3, requiredTime = null, optional = true){
+        this._text = text;
+        this._goal = goal;
+        this._delegate = delegate;
+        this._dueDate = dueDate;
+        this._enjoyment = enjoyment;
+        this._requiredTime = requiredTime;
+        this._optional = optional;
+        this._rank = this.calculateRank();
+        console.log(this);
+    }
+    calculateRank() {
+        let count = 0;
+        this._goal && count++;
+        this._delegate && count--;
+        this._dueDate && count++;
+        this._optional && count--;
+        return count + this._enjoyment;
+    }
+    getRank() {
+        return this._rank;
+    }
+    getText() {
+        return this._text;
+    }
+    setText(newText) {
+        this._text = newText;
+    }
+    getGoal() {
+        return this._goal;
+    }
+    setGoal(newGoal) {
+        this._goal = newGoal;
+    }
+    getDelegate() {
+        return this._delegate;
+    }
+    setDelegate(newDelegate) {
+        this._delegate = newDelegate;
+    }
+    getDueDate() {
+        return this._dueDate;
+    }
+    setDueDate(newDueDate) {
+        this._dueDate = newDueDate;
+    }
+    getEnjoyment() {
+        return this._enjoyment;
+    }
+    setEnjoyment(newEnjoyment) {
+        this._enjoyment = newEnjoyment;
+    }
+    getRequiredTime() {
+        return this._requiredTime;
+    }
+    setRequiredTime(newRequiredTime) {
+        this._requiredTime = newRequiredTime;
+    }
+    getOptional() {
+        return this._optional;
+    }
+    setOptional(newOptional) {
+        this._optional = newOptional;
+    }
+}
+function AddOption({ goals, setState }) {
+    _s();
+    const [goal, setGoal] = (0, _react.useState)("");
     const addOption = (e)=>{
         e.preventDefault();
-        const option = e.target.elements.option.value;
+        console.log(e.target.elements);
+        const option = new Action(e.target.elements.option.value, goal);
         if (option) {
             setState((prev)=>{
                 return {
@@ -27634,12 +27837,29 @@ function AddOption({ setState }) {
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
         onSubmit: addOption,
         children: [
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                type: "text",
-                name: "option"
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                children: "What do you need to do?"
             }, void 0, false, {
                 fileName: "src/components/AddOption.js",
-                lineNumber: 18,
+                lineNumber: 106,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                type: "text",
+                name: "option",
+                required: true
+            }, void 0, false, {
+                fileName: "src/components/AddOption.js",
+                lineNumber: 107,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _dropdownDefault.default), {
+                name: "goals",
+                selections: goals,
+                choose: setGoal
+            }, void 0, false, {
+                fileName: "src/components/AddOption.js",
+                lineNumber: 108,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -27647,16 +27867,17 @@ function AddOption({ setState }) {
                 children: "Add Option"
             }, void 0, false, {
                 fileName: "src/components/AddOption.js",
-                lineNumber: 19,
+                lineNumber: 109,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/components/AddOption.js",
-        lineNumber: 17,
+        lineNumber: 105,
         columnNumber: 5
     }, this);
 }
+_s(AddOption, "7/TnzEIY1/Cdl755WSWx4Sy/FAU=");
 _c = AddOption;
 var _c;
 $RefreshReg$(_c, "AddOption");
@@ -27666,6 +27887,75 @@ $RefreshReg$(_c, "AddOption");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}]},["igKGj","1xC6H","8lqZg"], "8lqZg", "parcelRequire71e0")
+},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./Dropdown":"fdO3s","react":"21dqq"}],"fdO3s":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$711d = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$711d.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>Dropdown);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _s = $RefreshSig$();
+function Dropdown({ selections, choose }) {
+    _s();
+    const [open, setOpen] = (0, _react.useState)(false);
+    const toggleOpen = ()=>{
+        setOpen(!open);
+    };
+    const chooseGoal = (e)=>{
+        e.preventDefault();
+        console.log(e.target.innerText);
+        choose(e.target.innerText);
+        toggleOpen();
+    };
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                children: "Does this action belong to a goal?"
+            }, void 0, false, {
+                fileName: "src/components/Dropdown.js",
+                lineNumber: 15,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                type: "button",
+                onClick: toggleOpen,
+                children: "select a goal"
+            }, void 0, false, {
+                fileName: "src/components/Dropdown.js",
+                lineNumber: 16,
+                columnNumber: 9
+            }, this),
+            open && selections.map((selection)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
+                    onClick: chooseGoal,
+                    display: false,
+                    children: selection
+                }, selection, false, {
+                    fileName: "src/components/Dropdown.js",
+                    lineNumber: 17,
+                    columnNumber: 46
+                }, this))
+        ]
+    }, void 0, true, {
+        fileName: "src/components/Dropdown.js",
+        lineNumber: 14,
+        columnNumber: 5
+    }, this);
+}
+_s(Dropdown, "xG1TONbKtDWtdOTrXaTAsNhPg/Q=");
+_c = Dropdown;
+var _c;
+$RefreshReg$(_c, "Dropdown");
+
+  $parcel$ReactRefreshHelpers$711d.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","react":"21dqq"}]},["igKGj","1xC6H","8lqZg"], "8lqZg", "parcelRequire71e0")
 
 //# sourceMappingURL=index.975ef6c8.js.map

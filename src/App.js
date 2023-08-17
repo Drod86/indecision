@@ -9,18 +9,20 @@ export function App() {
     title: 'Indescision App',
     subtitle: 'Put your life in the hands of a computer',
     options: [],
-    decision: ''
+    completed:[],
+    goals: ['general', 'play'],
+    decision: []
   });
   
-  const {title, subtitle, options, decision} = state;
+  const {title, subtitle, options, completed, goals, decision} = state;
   
   return (
     <div>
       <Header title={title} subtitle={subtitle} />
       <Action options={options} setState={setState}/>
-      <p>{decision}</p>
+      {decision.map(dec => <p key={decision.length > 0 && dec.getText()}>{decision.length > 0 ? dec.getText() : ''}</p>) }
       <Options options={options} setState={setState}/>
-      <AddOption setState={setState}/>
+      <AddOption goals={goals} setState={setState}/>
     </div>
   );
 } 

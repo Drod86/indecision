@@ -1,8 +1,9 @@
-export default function Option({item, removeOption, i}) {
+export default function Option({item, removeOption, completeOption, i}) {
   return (
-    <li key={item}>
-      {item}
+    <li key={i}>
+      {item.getText()}
       <button id={i} onClick={removeOption}>Remove</button>
+      <button id={i} onClick={completeOption}>Complete</button>
     </li>
-          )
+  )
 }

@@ -19,7 +19,19 @@ export default function Options ({options, setState}) {
     setState(prev => {
       return {
         ...prev,
-        options: prev.options.filter(option => option !== options[index])
+        options: prev.options.filter(option => option.getText() !== options[index].getText())
+      }
+    })
+  }
+
+  const completeOption = (e) => {
+    e.preventDefault();
+    const index = e.target.id;
+    setState(prev => {
+      return {
+        ...prev,
+        options: prev.options.filter(option => option.getText() !== options[index].getText()),
+        completed: [...prev.completed, options[index]]
       }
     })
   }
@@ -30,7 +42,7 @@ export default function Options ({options, setState}) {
       <button onClick={removeAll}>Clear Options</button>
       <ol>
         {options.map((item, i) => (
-          <Option key={item} item={item} i={i} removeOption={removeOption}/>
+          <Option key={item.getText()} item={item} i={i} removeOption={removeOption} completeOption={completeOption}/>
         ))}
       </ol>
     </section>
